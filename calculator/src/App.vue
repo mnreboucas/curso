@@ -13,8 +13,7 @@ export default {
 }
 </script>
 
-<st
-        Calculatoryle>
+<style>
 @font-face {
     font-family: "RobotoMono";
     src: url("./Fonts/RobotoMono/static/RobotoMono-Thin.ttf");
