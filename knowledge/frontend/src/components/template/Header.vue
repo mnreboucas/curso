@@ -1,33 +1,38 @@
 <template>
     <header class="header">
-        <a class="toggle" @click="toggleMenu" :v-if="!hideToggle"> <!-- Mostrará caso não escondido v-if="!hideToggle" -->
-            <i class="fa fa-lg" :class="icon"></i>
+        <a class="toggle" @click="toggleMenu" :v-show="!hideToggle"> <!-- Mostrará caso não escondido v-if="!hideToggle" -->
+            <i class="fa fa-lg " :class="icon"></i>
         </a>
         <h1 class="title">
-            {{ title }}
+            <router-link to="/">{{ title }}</router-link>
         </h1>
+        <UserDropdown v-if="!hideUserDropdown" />
     </header>
 
 </template>
 
 <script>
-export default {
-    name: 'Header',
-    props: {
-        title: String,
-        hideToggle: Boolean
-    },
-    computed: {
-        icon() {
-            return this.$store.state.isMenuVisible ? "fa-angle-left" : "fa-angle-down"
-        }
-    },
-    methods: {
-        toggleMenu() {
-            this.$store.commit('toggleMenu')
+    import UserDropdown from './UserDropdown'
+    export default {
+        name: 'Header',
+        components: { UserDropdown },
+        props: {
+            title: String,
+            hideToggle: Boolean,
+            hideUserDropdown: Boolean
+        },
+        computed: {
+            icon() {
+                let icon = this.$store.state.isMenuVisible ? "fa-angle-left" : "fa-angle-down"
+                return icon
+            }
+        },
+        methods: {
+            toggleMenu() {
+                this.$store.commit('toggleMenu')
+            }
         }
     }
-}
 </script>
 
 <style>
@@ -49,7 +54,12 @@ export default {
     }
 
     .title a {
-        color: #FFF;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .title a:hover {
+        color: #fff;
         text-decoration: none;
     }
 
@@ -66,6 +76,7 @@ export default {
     }
 
     header.header > a.toggle:hover {
+        color: #fff;
         background-color:rgba(0, 0, 0, 0.2);
     }
 
