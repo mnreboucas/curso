@@ -8,17 +8,19 @@ use App\Controller\UserStatsController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- */
+*/
 #[ApiResource(collectionOperations: [
     'get',
     'get_stats' => [
         'method' => 'GET',
         'path' => '/users/stats',
         'controller' => UserStatsController::class,
-    ]
+    ],
+    'post' => ['method' => 'post'],
 ])]
 class User
 {
@@ -31,15 +33,18 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $email;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $password;
@@ -47,7 +52,7 @@ class User
     /**
      * @ORM\Column(type="boolean")
      */
-    private $admin;
+    private $admin = false;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
