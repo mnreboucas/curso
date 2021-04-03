@@ -12,7 +12,7 @@
                 <i class="fa fa-cogs"></i> Administração
             </router-link>
             <a>
-                <i class="fa fa-sign-out"></i> Sair
+                <i class="fas fa-sign-out-alt"></i> Sair
             </a>
         </div>
     </div>

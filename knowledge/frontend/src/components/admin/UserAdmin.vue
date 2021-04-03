@@ -44,7 +44,17 @@
                 @click="remove">Excluir</b-button>
             <b-button class="ml-2" @click="reset">Cancelar</b-button>
         </b-form>
-        <b-table hover striped :items="users" :fields="fields"></b-table>
+        <hr>
+        <b-table :items="users" :fields="fields" hover striped>
+            <template #cell(actions)="data">
+                <b-button variant="warming" @click="loadUser(data.item)">
+                    <i class="fas fa-pencil-alt fa-2x"></i>
+                </b-button>
+                <b-button class="ml-2" variant="danger" @click="loadUser(data.item, 'remove')">
+                    <i class="fa fa-trash"></i>
+                </b-button>
+            </template>
+        </b-table>
     </div>
 </template>
 
@@ -54,7 +64,7 @@
 
     export default {
         name: 'UserAdmin',
-        data() {
+        data: function() {
             return {
                 mode: 'save',
                 user: {},
@@ -65,7 +75,7 @@
                     { key: 'email', label: 'E-mail', sortable: true },
                     { key: 'admin', label: 'Administrador', sortable: true,
                         formatter: value => value ? 'Sim' : 'Não' },
-                    { key: 'action', label: 'Ações'}
+                    { key: 'actions', label: 'Ações'}
                 ]
             }
         },
@@ -89,25 +99,34 @@
                         this.$toasted.global.defaultSuccess()
                         this.reset()
                     })
-                    .catch(showError)
 
-                // http[method](`${ http }/users${id}`, this.user)
+                // http[method](`${http}/users${id}`, this.user)
                 //     .then(() => {
                 //         this.$toasted.global.defaultSuccess()
                 //         this.reset()
                 //     })
+                    .catch(showError)
                 
             },
             remove() {
                 const id = this.user.id
-                axios.delete(`${baseUrlApi}/users/${id}`)
+                axios.delete(`${baseUrlApi}users/${id}`)
                     .then(() => {
                         this.$toasted.global.defaultSuccess()
                         this.reset()
                     })
                     .catch(showError)
+            },
+            loadUser(user, mode = 'save') {
+                this.mode = mode
+                this.user = { ...user } //{ ...user } faz um clone do objeto utilizando um spread
             }
 
+        },
+        computed: {
+            rows() {
+                return this.items.length
+            }
         },
         mounted() {
             this.loadUsers()
