@@ -7,6 +7,7 @@
                     <b-form-group label="Nome:" label-for="user-name">
                         <b-form-input id="user-name" type="text"
                             v-model="user.name" required
+                            :readonly="mode === 'remove'"
                             placelholder="Informe o nome do usuário..." />
                     </b-form-group>
                 </b-col>
@@ -14,14 +15,16 @@
                     <b-form-group label="E-mail:" label-for="user-email">
                         <b-form-input id="user-email" type="text"
                             v-model="user.email" required
+                            :readonly="mode === 'remove'"
                             placelholder="Informe o E-mail do usuário..." />
                     </b-form-group>
                 </b-col>
             </b-row>
-            <b-form-checkbox id="user-admin" v-model="user.admin" class="mt-3 mb-3">
+            <b-form-checkbox id="user-admin" v-model="user.admin"
+                class="mt-3 mb-3" :readonly="mode === 'remove'">
                 Administrador?
             </b-form-checkbox>
-            <b-row>
+            <b-row v-show="mode === 'save'">
                 <b-col md="6" sm="12">
                     <b-form-group label="Senha:" label-for="user-password">
                         <b-form-input id="user-password" type="password"
@@ -38,14 +41,22 @@
                     </b-form-group>
                 </b-col>
             </b-row>
-            <b-button variant="primary" v-if="mode === 'save'"
-                @click="save">Salvar</b-button>
-            <b-button variant="danger" v-if="mode === 'remove'"
-                @click="remove">Excluir</b-button>
-            <b-button class="ml-2" @click="reset">Cancelar</b-button>
+            <b-row>
+                <b-col xs="12">
+                    <b-button variant="primary" v-if="mode === 'save'"
+                        @click="save">Salvar</b-button>
+                    <b-button variant="danger" v-if="mode === 'remove'"
+                        @click="remove">Excluir</b-button>
+                    <b-button class="ml-2" @click="reset">Cancelar</b-button>
+                </b-col>
+            </b-row>
         </b-form>
         <hr>
-        <b-table :items="users" :fields="fields" hover striped>
+        <b-table hover striped id="list"
+            :items="users"
+            :fields="fields"
+            :current-page="currentPage"
+            :per-page="perPage">
             <template #cell(actions)="data">
                 <b-button variant="warming" @click="loadUser(data.item)">
                     <i class="fas fa-pencil-alt fa-2x"></i>
@@ -55,11 +66,18 @@
                 </b-button>
             </template>
         </b-table>
+        <!-- Pagination -->
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="list"
+        ></b-pagination>
     </div>
 </template>
 
 <script>
-    import { http, showError, baseUrlApi } from '@/global'
+    import { http, showError } from '@/global'
     import axios from 'axios'
 
     export default {
@@ -76,8 +94,15 @@
                     { key: 'admin', label: 'Administrador', sortable: true,
                         formatter: value => value ? 'Sim' : 'Não' },
                     { key: 'actions', label: 'Ações'}
-                ]
+                ],
+                currentPage: 1,
+                perPage: 3,
             }
+        },
+        computed: {
+            rows() {
+                return this.users.length
+            },
         },
         methods: {
             // Carregar os usuários do backend
@@ -94,7 +119,7 @@
             save() {
                 const method = this.user.id ? 'put' : 'post'
                 const id = this.user.id ? `/${this.user.id}` : ''
-                axios[method](`${baseUrlApi}users${id}`, this.user)
+                axios[method](`${http}/users${id}`, this.user)
                     .then(() => {
                         this.$toasted.global.defaultSuccess()
                         this.reset()
@@ -110,7 +135,7 @@
             },
             remove() {
                 const id = this.user.id
-                axios.delete(`${baseUrlApi}users/${id}`)
+                axios.delete(`${http}/users/${id}`)
                     .then(() => {
                         this.$toasted.global.defaultSuccess()
                         this.reset()
@@ -122,11 +147,6 @@
                 this.user = { ...user } //{ ...user } faz um clone do objeto utilizando um spread
             }
 
-        },
-        computed: {
-            rows() {
-                return this.items.length
-            }
         },
         mounted() {
             this.loadUsers()

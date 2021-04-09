@@ -2,7 +2,7 @@ import axios from 'axios'
 import Vue from 'vue'
 
 export const http = axios.create({
-    baseURL: 'http://localhost:8000/api/'
+    baseURL: 'http://localhost:8000/api'
 })
 
 export const baseUrlApi = 'http://localhost:8000/api/'

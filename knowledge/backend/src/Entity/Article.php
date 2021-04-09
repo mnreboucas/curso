@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource()
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
  */
+
 class Article
 {
     /**
@@ -34,10 +35,10 @@ class Article
      */
     private $imageUrl;
 
-    /**
-     * @ORM\Column(type="binary")
-     */
-    private $content;
+    // /**
+    //  * @ORM\Column(type="binary")
+    //  */
+    // private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
@@ -92,17 +93,17 @@ class Article
         return $this;
     }
 
-    public function getContent()
-    {
-        return $this->content;
-    }
+    // public function getContent()
+    // {
+    //     return $this->content;
+    // }
 
-    public function setContent($content): self
-    {
-        $this->content = $content;
+    // public function setContent($content): self
+    // {
+    //     $this->content = $content;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getUserId(): ?User
     {

@@ -6,12 +6,12 @@
             <b-card no-body> <!-- Tags que começam com "b", são tags do vue bootstrap. -->
                 <b-tabs card>
                     <b-tab title="Artigos">
-                        <ArticleAdmin />
+                        <ArticleAdmin active/>
                     </b-tab>
                     <b-tab title="Categorias">
                         <CategoryAdmin />
                     </b-tab>
-                    <b-tab title="Usuários" active>
+                    <b-tab title="Usuários">
                         <UserAdmin />
                     </b-tab>
                 </b-tabs>

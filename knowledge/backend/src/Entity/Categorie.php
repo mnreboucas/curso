@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource()
  * @ORM\Entity(repositoryClass=CategorieRepository::class)
  */
+
 class Categorie
 {
     /**
